@@ -1,4 +1,4 @@
-## Hi there 👋
+## Hi there 👋, Welcome
 
 Hello! 👋🏻 My name is Stepan. I live in Russia, and to be more precise in Saratov region, and I am a high school student.
 
@@ -15,5 +15,3 @@ Visual Studio Code, Bootstrap studio, Gitlins, Mysql.
 I am currently learning github education 
 I'm currently learning lua
 Pronouns: He/His
-
-Translated with DeepL.com (free version)
