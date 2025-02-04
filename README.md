@@ -1,4 +1,4 @@
-## Hi there 👋, Welcome
+## Hi there 👋🏻, Welcome
 
 Hello! 👋🏻 My name is Stepan. I live in Russia🪆, and to be more precise in Saratov region, and I am a high school student🏫.
 
