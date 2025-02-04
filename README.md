@@ -1,4 +1,5 @@
 ## Hi there 👋🏻, Welcome
+![](https://github.com/user-attachments/assets/05d94366-c1ba-48bb-92a1-ee31261d6950)
 
 Hello! 👋🏻 My name is Stepan. I live in Russia🪆, and to be more precise in Saratov region, and I am a high school student🏫.
 
