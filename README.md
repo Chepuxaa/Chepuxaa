@@ -16,3 +16,4 @@ Visual Studio Code, Bootstrap studio, Gitlins, Mysql.
 - 🧠 I am currently learning github education 
 - 📚 I'm currently learning lua
 - 🙎🏻‍♂️ Pronouns: He/His
+- ☣️ Bio: https://chepuxaa.github.io/Chepuxaa/
