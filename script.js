@@ -217,16 +217,35 @@ function updateTime() {
 function playMusic() {
     const music = document.getElementById('bgMusic');
     if (music) {
-        music.play().then(() => {
-            console.log('Музыка играет');
-            musicPlaying = true;
-            updateMusicButton();
-        }).catch((error) => {
-            console.log('Автовоспроизведение заблокировано:', error);
-            // Музыка запустится после взаимодействия пользователя
-        });
+        // Для Edge нужно больше времени на загрузку
+        setTimeout(() => {
+            music.play().then(() => {
+                console.log('Музыка играет в Edge');
+                musicPlaying = true;
+                updateMusicButton();
+            }).catch((error) => {
+                console.log('Edge заблокировал автозапуск:', error);
+                // Показываем пользователю кнопку для запуска
+                showMusicPlayButton();
+            });
+        }, 1000); // Задержка для Edge
     }
 }
+
+function showMusicPlayButton() {
+    const musicBtn = document.getElementById('musicBtn');
+    musicBtn.innerHTML = '<i class="fas fa-play"></i><span>▶ Включить музыку</span>';
+    musicBtn.style.background = 'rgba(255, 0, 0, 0.2)';
+    musicBtn.onclick = function() {
+        const music = document.getElementById('bgMusic');
+        music.play().then(() => {
+            musicPlaying = true;
+            updateMusicButton();
+            musicBtn.style.background = 'rgba(0, 255, 0, 0.1)';
+        });
+    };
+}
+
 
 // Копирование Discord
 function copyDiscord() {
