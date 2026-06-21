@@ -27,7 +27,7 @@
         '.vlt-bg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;pointer-events:none;background:#05070a;}',
         '.vlt-bg__image{position:absolute;top:-3.5%;left:-3.5%;right:-3.5%;bottom:-3.5%;opacity:0;background-position:center;background-size:cover;transform:scale(1.045);filter:blur(30px) saturate(1.15) brightness(.58);transition:opacity .72s ease,transform 7s ease;}',
         '.vlt-bg__image.active{opacity:1;transform:scale(1.012);}',
-        '.vlt-bg__veil{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,rgba(5,7,10,.98) 0%,rgba(5,7,10,.64) 42%,rgba(5,7,10,.84) 100%),linear-gradient(180deg,rgba(5,7,10,.76) 0%,rgba(5,7,10,.2) 42%,rgba(5,7,10,.96) 100%);}',
+        '.vlt-bg__veil{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,rgba(5,7,10,.98) 0%,rgba(5,7,10,.64) 42%,rgba(5,7,10,.84) 100%),linear-gradient(180deg,rgba(5,7,10,.72) 0%,rgba(5,7,10,.22) 38%,rgba(5,7,10,.82) 100%);}',
         '.vlt-bg__shine{position:absolute;left:0;right:0;top:0;height:58%;background:linear-gradient(110deg,rgba(255,255,255,.16),rgba(140,190,255,.08) 34%,rgba(255,255,255,0) 68%);opacity:.72;}',
         '.vlt-bg__texture{position:absolute;top:0;left:0;right:0;bottom:0;opacity:.07;background-image:linear-gradient(115deg,rgba(255,255,255,.08),rgba(255,255,255,0) 38%),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,rgba(255,255,255,0) 1px 3px);}',
 
@@ -60,6 +60,7 @@
 
         'body.%THEME% .wrap{z-index:14;}',
         'body.%THEME% .wrap__content{padding-top:17.65em;}',
+        'body.%THEME% .wrap,body.%THEME% .wrap__content,body.%THEME% .activity,body.%THEME% .activity__body,body.%THEME% .items-line,body.%THEME% .items-cards,body.%THEME% .scroll,body.%THEME% .scroll__body,body.%THEME% .scroll__content{background:transparent!important;}',
         'body.%THEME% .items-line{padding-bottom:3.15em;}',
         'body.%THEME% .items-line__head{padding-left:3.8vw;padding-right:3.8vw;margin-bottom:.9em;}',
         'body.%THEME% .items-line__title{font-size:1.14em;font-weight:900;color:rgba(255,255,255,.86);text-shadow:0 .4em 1.4em rgba(0,0,0,.35);}',
@@ -86,9 +87,14 @@
         'body.platform--browser.%THEME% .menu{backdrop-filter:blur(24px) saturate(1.12);}',
         'body.%THEME% .menu__item{border-radius:.92em;color:rgba(255,255,255,.82);}',
         'body.%THEME% .menu__item.focus,body.%THEME% .menu__item.hover{background:#fff;color:#0b0f14;}',
-        'body.%THEME%.menu--open:not(.light--version) .wrap__left{visibility:visible!important;transform:translate3d(15em,0,0)!important;}',
-        'body.%THEME%.menu--open:not(.light--version) .wrap__content{transform:translate3d(15em,0,0)!important;}',
-        'body.%THEME%.menu--open:not(.light--version) .vlt-scene{opacity:.32;transform:translate3d(15em,0,0);}',
+        'body.%THEME%.menu--open:not(.light--version) .wrap__left{visibility:visible!important;width:18em!important;margin-left:-18em!important;transform:translate3d(18em,0,0)!important;}',
+        'body.%THEME%.menu--open:not(.light--version) .wrap__content{transform:translate3d(18em,0,0)!important;}',
+        'body.%THEME%.menu--open:not(.light--version) .vlt-scene{display:none!important;}',
+        'body.%THEME%.menu--open:not(.light--version) .menu__text{display:block!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:10.8em;}',
+        'body.%THEME%.search--open .vlt-scene,body.%THEME%.keyboard-input--visible .vlt-scene{display:none!important;}',
+        'body.%THEME%.search--open .vlt-bg__image,body.%THEME%.keyboard-input--visible .vlt-bg__image{opacity:.28;}',
+        'body.%THEME%.vlt--overlay-open .vlt-scene{display:none!important;}',
+        'body.%THEME%.vlt--overlay-open .vlt-bg__image{opacity:.28;}',
 
         'body.%THEME% .selectbox__content,body.%THEME% .modal__content,body.%THEME% .settings__content{background:rgba(12,15,21,.96)!important;}',
         '@media screen and (max-width:790px){.vlt-scene{display:none;}body.%THEME% .head{top:.8em;left:.8em;right:.8em;}body.%THEME% .head__body{border-radius:1.05em;}body.%THEME% .wrap__content{padding-top:5.85em;}body.%THEME% .items-line__head,body.%THEME% .scroll__content{padding-left:1em!important;padding-right:1em!important;}body.%THEME% .card{width:10.7em;}}'
@@ -290,7 +296,26 @@
     }
 
     function scanFocus() {
+        syncOverlayState();
         updateFromCard(findFocusedCard());
+    }
+
+    function syncOverlayState() {
+        var open = false;
+
+        if (document.body.classList) {
+            open = document.body.classList.contains('search--open') ||
+                document.body.classList.contains('keyboard-input--visible') ||
+                document.body.classList.contains('selectbox--open');
+        }
+
+        if (!open && document.querySelector('.search')) open = true;
+        if (!open && document.querySelector('.search-box')) open = true;
+
+        if (document.body.classList) {
+            if (open) document.body.classList.add('vlt--overlay-open');
+            else document.body.classList.remove('vlt--overlay-open');
+        }
     }
 
     function toggleMenu() {
@@ -327,6 +352,8 @@
         document.addEventListener('mouseover', function (event) {
             updateFromCard(closestByClass(event.target, 'card'));
         }, true);
+        document.addEventListener('keydown', syncOverlayState, true);
+        document.addEventListener('keyup', syncOverlayState, true);
         document.addEventListener('mousedown', function (event) {
             if (!closestByClass(event.target, 'head__menu-icon')) return;
             event.preventDefault();
@@ -345,6 +372,8 @@
             mutationObserver = new MutationObserver(function (mutations) {
                 var i;
                 var target;
+                syncOverlayState();
+
                 for (i = 0; i < mutations.length; i++) {
                     target = mutations[i].target;
                     if (target && target.classList && target.classList.contains('card') && (target.classList.contains('focus') || target.classList.contains('hover'))) {
@@ -390,6 +419,7 @@
 
     window.lampa_velvet_destroy = function () {
         document.body.classList.remove(THEME);
+        document.body.classList.remove('vlt--overlay-open');
         if (scene) scene.remove();
         if (bg) bg.remove();
         if (mutationObserver) mutationObserver.disconnect();
