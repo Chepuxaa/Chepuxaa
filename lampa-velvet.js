@@ -10,6 +10,10 @@
     var activeLayer = 0;
     var bg;
     var layers = [];
+    var hero;
+    var heroTitle;
+    var heroMeta;
+    var heroRating;
     var scanTimer;
     var mutationObserver;
     var initialized = false;
@@ -53,7 +57,39 @@
         'body.%CLASS% .card--wide .card__img{border-radius:1.15em;}',
         'body.%CLASS% .selectbox__content,body.%CLASS% .modal__content,body.%CLASS% .settings__content{background-color:rgba(17,12,9,.94)!important;}',
         '@media screen and (max-width:790px){body.%CLASS% .head{top:.8em;left:.8em;right:.8em;}body.%CLASS% .head__body{min-height:3.8em;padding:.5em .9em;border-radius:1em;}body.%CLASS% .wrap__content{padding-top:5.7em;}body.%CLASS% .items-line__head,body.%CLASS% .scroll__content{padding-left:1em!important;padding-right:1em!important;}}',
-        'body.no--animation .velvet-bg__image,body.no--animation.%CLASS% .card,body.no--animation.%CLASS% .card__img,body.no--animation.%CLASS% .head__action{transition:none!important;}'
+        'body.no--animation .velvet-bg__image,body.no--animation.%CLASS% .card,body.no--animation.%CLASS% .card__img,body.no--animation.%CLASS% .head__action{transition:none!important;}',
+        'body.%CLASS%:after{content:"";position:fixed;left:5.8vw;right:5.8vw;top:2em;height:7em;z-index:1;border-radius:2em;background:linear-gradient(90deg,rgba(255,83,32,.14),rgba(255,255,255,.04),rgba(255,83,32,.08));filter:blur(2em);pointer-events:none;}',
+        'body.%CLASS% .head{top:2.05em;left:5.6vw;right:5.6vw;}',
+        'body.%CLASS% .head__body{min-height:3.9em;padding:.52em 1.25em;border-radius:1.25em;background:linear-gradient(90deg,rgba(54,20,11,.66),rgba(42,13,8,.38));border-color:rgba(255,255,255,.11);box-shadow:0 1.25em 4.2em rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1);}',
+        'body.%CLASS% .head__title{font-size:1.45em;font-weight:700;color:rgba(255,255,255,.92);}',
+        'body.%CLASS% .head__logo-icon{width:2.1em;height:2.1em;border-radius:.62em;}',
+        'body.%CLASS% .head__menu-icon svg,body.%CLASS% .head__backward svg{width:1.85em!important;height:1.85em!important;}',
+        'body.%CLASS% .head__action{width:2.35em;height:2.35em;padding:.48em;margin-left:.55em;background:rgba(255,255,255,.055);}',
+        'body.%CLASS% .head__time-now{font-size:1.7em;}',
+        '.velvet-hero{position:fixed;left:5.8vw;right:5.8vw;top:7.45em;height:8.4em;z-index:7;pointer-events:none;display:flex;align-items:flex-end;}',
+        '.velvet-hero__body{max-width:38em;padding:0 0 1.2em 0;opacity:.98;transform:translate3d(0,0,0);transition:opacity 220ms ease,transform 220ms ease;}',
+        '.velvet-hero__eyebrow{font-size:.82em;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.48);margin-bottom:.72em;}',
+        '.velvet-hero__title{font-size:2.75em;line-height:1.02;font-weight:800;color:#fff;text-shadow:0 .22em 1.1em rgba(0,0,0,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}',
+        '.velvet-hero__meta{display:flex;align-items:center;gap:.65em;margin-top:.78em;font-size:1.02em;font-weight:600;color:rgba(255,255,255,.68);}',
+        '.velvet-hero__rating{display:none;padding:.28em .66em;border-radius:999px;background:rgba(255,255,255,.92);color:#1b110d;font-weight:800;}',
+        '.velvet-hero__rating.visible{display:inline-flex;}',
+        '.velvet-hero__dot{width:.34em;height:.34em;border-radius:50%;background:rgba(255,255,255,.34);}',
+        'body.%CLASS% .wrap__content{padding-top:16.2em;}',
+        'body.%CLASS% .items-line__head{margin-bottom:.9em;}',
+        'body.%CLASS% .items-line__title{font-size:1.28em;color:rgba(255,255,255,.84);text-shadow:0 .25em 1em rgba(0,0,0,.32);}',
+        'body.%CLASS% .items-line__more{padding:.45em 1em;background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);}',
+        'body.%CLASS% .card{width:11.9em;opacity:.86;}',
+        'body.%CLASS% .card__img{border-radius:.92em;box-shadow:0 1.15em 2.75em rgba(0,0,0,.32),inset 0 0 0 1px rgba(255,255,255,.06);}',
+        'body.%CLASS% .card__view:before{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;z-index:1;border-radius:0 0 .92em .92em;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.58));opacity:.65;pointer-events:none;}',
+        'body.%CLASS% .card__vote{z-index:2;background:rgba(8,6,5,.72);box-shadow:0 .55em 1.1em rgba(0,0,0,.35);}',
+        'body.%CLASS% .card.focus,body.%CLASS% .card.hover{opacity:1;transform:translate3d(0,-.62em,0) scale(1.065);}',
+        'body.%CLASS% .card.focus .card__img,body.%CLASS% .card.hover .card__img{box-shadow:0 1.6em 3.8em rgba(0,0,0,.55),0 0 0 .14em rgba(255,255,255,.96),0 0 2.4em rgba(255,74,36,.34);filter:saturate(1.12) brightness(1.06);}',
+        'body.%CLASS% .card__title{font-size:.98em;font-weight:700;color:rgba(255,255,255,.86);}',
+        'body.%CLASS% .card.focus .card__title,body.%CLASS% .card.hover .card__title{color:#fff;}',
+        'body.%CLASS% .card__age{font-size:.86em;color:rgba(255,255,255,.42);}',
+        'body.%CLASS% .card__type{left:.55em;top:.55em;background:#ff3448;color:#fff;border-radius:999px;}',
+        'body.%CLASS% .card__quality{left:.55em;bottom:.65em;border-radius:999px;background:#fff;color:#120d09;}',
+        '@media screen and (max-width:790px){.velvet-hero{display:none;}body.%CLASS%:after{display:none;}body.%CLASS% .wrap__content{padding-top:5.8em;}body.%CLASS% .card{width:10.8em;}body.%CLASS% .head{top:.75em;left:.75em;right:.75em;}}'
     ].join('').replace(/%CLASS%/g, PLUGIN_CLASS);
 
     function addStyle() {
@@ -84,6 +120,33 @@
 
         document.body.insertBefore(bg, document.body.firstChild);
         layers = Array.prototype.slice.call(bg.querySelectorAll('.velvet-bg__image'));
+    }
+
+    function addHero() {
+        if (document.querySelector('.velvet-hero')) {
+            hero = document.querySelector('.velvet-hero');
+        }
+        else {
+            hero = document.createElement('div');
+            hero.className = 'velvet-hero';
+            hero.innerHTML = [
+                '<div class="velvet-hero__body">',
+                '<div class="velvet-hero__eyebrow">Lampa Velvet</div>',
+                '<div class="velvet-hero__title">Выберите фильм</div>',
+                '<div class="velvet-hero__meta">',
+                '<span class="velvet-hero__rating"></span>',
+                '<span class="velvet-hero__dot"></span>',
+                '<span class="velvet-hero__text">Фон меняется от карточки в фокусе</span>',
+                '</div>',
+                '</div>'
+            ].join('');
+
+            document.body.insertBefore(hero, document.body.firstChild);
+        }
+
+        heroTitle = hero.querySelector('.velvet-hero__title');
+        heroMeta = hero.querySelector('.velvet-hero__text');
+        heroRating = hero.querySelector('.velvet-hero__rating');
     }
 
     function absoluteUrl(url) {
@@ -145,6 +208,46 @@
         return match ? absoluteUrl(match[1]) : '';
     }
 
+    function textFromCard(card, selector) {
+        var node = card && card.querySelector ? card.querySelector(selector) : null;
+        return node ? (node.textContent || node.innerText || '').replace(/^\s+|\s+$/g, '') : '';
+    }
+
+    function yearFromData(data) {
+        var date = data && (data.release_date || data.first_air_date || data.birthday || data.release_year);
+        return date ? String(date).slice(0, 4) : '';
+    }
+
+    function ratingFromData(data, card) {
+        var value = data && (data.cub_hundred_rating || data.vote_average || data.rating);
+        var text = value ? String(parseFloat(value).toFixed(1)) : textFromCard(card, '.card__vote');
+
+        return text && text !== '0.0' ? text : '';
+    }
+
+    function updateHero(data, card) {
+        if (!heroTitle || !heroMeta || !heroRating) return;
+
+        var title = data && (data.title || data.name || data.original_title || data.original_name);
+        var year = yearFromData(data) || textFromCard(card, '.card__age');
+        var type = data && data.original_name ? 'Сериал' : 'Фильм';
+        var rating = ratingFromData(data, card);
+
+        title = title || textFromCard(card, '.card__title') || 'Lampa Velvet';
+
+        heroTitle.innerText = title;
+        heroMeta.innerText = [type, year].filter(function (item) { return item; }).join('  •  ') || 'В фокусе';
+
+        if (rating) {
+            heroRating.innerText = rating;
+            heroRating.classList.add('visible');
+        }
+        else {
+            heroRating.innerText = '';
+            heroRating.classList.remove('visible');
+        }
+    }
+
     function setBackground(url) {
         url = absoluteUrl(url);
         if (!url || url === currentUrl || !layers.length) return;
@@ -163,9 +266,11 @@
     function updateFromCard(card) {
         if (!card || !card.classList || !card.classList.contains('card')) return;
 
-        var dataUrl = imageFromData(dataFromCard(card));
+        var data = dataFromCard(card);
+        var dataUrl = imageFromData(data);
         var elemUrl = imageFromElement(card);
 
+        updateHero(data, card);
         setBackground(dataUrl || elemUrl);
     }
 
@@ -221,6 +326,7 @@
 
         addStyle();
         addBackground();
+        addHero();
         document.body.classList.add(PLUGIN_CLASS);
         bindEvents();
         scanFocus();
